@@ -27,10 +27,14 @@ export function Bg3Builds() {
     : builds
 
   return (
-    <div className="min-h-screen bg-[url('/placeholder.svg?height=1080&width=1920')] bg-cover bg-center bg-fixed">
+    <div className="min-h-screen bg-[linear-gradient(to bottom, #030319, #1a1d23)] bg-cover bg-center bg-fixed">
       <div className="min-h-screen bg-black bg-opacity-90 py-8 px-4 text-amber-100 font-['Eczar',serif]">
         <style jsx global>{`
           @import url('https://fonts.googleapis.com/css2?family=Eczar:wght@400;500;600;700&display=swap');
+          body {
+            background-image: radial-gradient(farthest-corner at 50% 0%, #030319, #1a1d23);
+            background-size: 300px 300px;
+          }
         `}</style>
         <div className="container mx-auto">
           <div className="flex justify-center mb-4">
