@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,25 +19,65 @@ const builds = [
 
 const classes = [...new Set(builds.map(build => build.class))]
 
-export function Bg3Builds() {
+const StarField = ({ depth }: { depth: number }) => {
+  return (
+    <div
+      className="absolute inset-0"
+      style={{
+        backgroundImage: `radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.9), rgba(0,0,0,0)),
+                          radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 1), rgba(0,0,0,0)),
+                          radial-gradient(2px 2px at 50px 160px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
+                          radial-gradient(3px 3px at 90px 40px, rgba(255, 255, 255, 1), rgba(0,0,0,0)),
+                          radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.9), rgba(0,0,0,0)),
+                          radial-gradient(3px 3px at 160px 120px, rgba(255, 255, 255, 1), rgba(0,0,0,0))`,
+        backgroundSize: '200px 200px',
+        animation: `twinkle 5s ease-in-out infinite alternate, parallax-${depth} 20s linear infinite`,
+      }}
+    />
+  )
+}
+
+export default function Component() {
   const [selectedClass, setSelectedClass] = useState<string | undefined>()
+  const [scrollY, setScrollY] = useState(0)
 
   const filteredBuilds = selectedClass 
     ? builds.filter(build => build.class === selectedClass)
     : builds
 
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
-    <div className="min-h-screen bg-[linear-gradient(to bottom, #030319, #1a1d23)] bg-cover bg-center bg-fixed">
-      <div className="min-h-screen bg-black bg-opacity-90 py-8 px-4 text-amber-100 font-['Eczar',serif]">
+    <div className="min-h-screen bg-gradient-to-b from-black to-blue-950 relative overflow-hidden">
+      <StarField depth={1} />
+      <StarField depth={2} />
+      <StarField depth={3} />
+      <div className="min-h-screen bg-black bg-opacity-60 py-8 px-4 text-amber-100 font-['Eczar',serif] relative z-10">
         <style jsx global>{`
           @import url('https://fonts.googleapis.com/css2?family=Eczar:wght@400;500;600;700&display=swap');
-          body {
-            background-image: radial-gradient(farthest-corner at 50% 0%, #030319, #1a1d23);
-            background-size: 300px 300px;
+          @keyframes twinkle {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+          }
+          @keyframes parallax-1 {
+            from { transform: translateY(0); }
+            to { transform: translateY(-200px); }
+          }
+          @keyframes parallax-2 {
+            from { transform: translateY(0); }
+            to { transform: translateY(-400px); }
+          }
+          @keyframes parallax-3 {
+            from { transform: translateY(0); }
+            to { transform: translateY(-600px); }
           }
         `}</style>
         <div className="container mx-auto">
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4" style={{ transform: `translateY(${scrollY * 0.5}px)` }}>
             <Image
               src="/placeholder.svg?height=150&width=300"
               alt="Baldur's Gate 3 Logo"
@@ -66,12 +106,23 @@ export function Bg3Builds() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredBuilds.map(build => (
-              <Card key={build.id} className="bg-black border-amber-400 shadow-lg hover:shadow-amber-400/50 transition-shadow duration-300">
-                <CardHeader className="border-b border-amber-400">
-                  <CardTitle className="text-2xl font-['Eczar',serif] text-amber-200">{build.name}</CardTitle>
-                  <CardDescription className="text-amber-300">{build.race} {build.class}</CardDescription>
+              <Card key={build.id} className="bg-black bg-opacity-80 border-amber-400 shadow-lg hover:shadow-amber-400/50 transition-shadow duration-300">
+                <CardHeader className="border-b border-amber-400 p-4">
+                  <div className="flex items-center">
+                    <Image
+                      src={`/placeholder.svg?height=80&width=80&text=${build.name.charAt(0)}`}
+                      alt={`${build.name}'s portrait`}
+                      width={80}
+                      height={80}
+                      className="rounded-full border-2 border-amber-400 mr-4"
+                    />
+                    <div>
+                      <CardTitle className="text-2xl font-['Eczar',serif] text-amber-200">{build.name}</CardTitle>
+                      <CardDescription className="text-amber-300">{build.race} {build.class}</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent className="mt-4">
+                <CardContent className="mt-4 p-4">
                   <ScrollArea className="h-24 rounded">
                     <p className="text-amber-100">{build.description}</p>
                   </ScrollArea>
