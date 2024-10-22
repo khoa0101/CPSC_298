@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<prompts>
-    <prompt type="feature">
-        <message>Add new feature</message>
-    </prompt>
-    <prompt type="bugfix">
-        <message>Fix bug</message>
-    </prompt>
-    <prompt type="refactor">
-        <message>Refactor code</message>
-    </prompt>
-</prompts>
+<prompt>
+    <system>Create an automated git commit command</system>
+    <model>gpt-4</model>
+    <task>summarize</task>
+</prompt>
