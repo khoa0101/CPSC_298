@@ -13,9 +13,9 @@ then:
 pip install 'autogen-agentchat==0.4.0.dev11' 'autogen-ext[openai]==0.4.0.dev11'
 ```
 then run this file:
-
+```bash
 python3 autoeg.py
-
+```
 edit the agent names and system messages as desired.
 
 OPEN AI KEY INSTRUCTIONS:
