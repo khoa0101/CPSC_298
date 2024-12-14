@@ -1,4 +1,3 @@
-'''
 # autoeg.py
 
 based on the example code for Python(AgentChat) in the readme at
