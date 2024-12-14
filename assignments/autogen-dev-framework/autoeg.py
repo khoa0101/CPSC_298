@@ -38,6 +38,8 @@ from openai_key import OPENAI_API_KEY
 DEFAULT_SYSTEM_MESSAGE = 'You are a helpful AI assistant. Solve tasks using your tools.' \
                          ' Reply with TERMINATE when the task has been completed.'
 
+from system_messages import PLANNER_MESSAGE, CODER_MESSAGE
+
 # Define a tool
 async def get_weather(city: str) -> str:
     return f"The weather in {city} is 73 degrees and Sunny."
@@ -45,8 +47,9 @@ async def get_weather(city: str) -> str:
 async def main() -> None:
     # Define an agent
     weather_agent_1 = AssistantAgent(
-        system_message = DEFAULT_SYSTEM_MESSAGE + ' Always do a good job, but be concise.',
-        name="weather_agent_1",
+        # system_message = DEFAULT_SYSTEM_MESSAGE + ' Always do a good job, but be concise.',
+        system_message = PLANNER_MESSAGE,
+        name="planner_agent",
         model_client=OpenAIChatCompletionClient(
             model="gpt-4o-2024-08-06",
             api_key=OPENAI_API_KEY,
@@ -55,8 +58,9 @@ async def main() -> None:
     )
     
     weather_agent_2 = AssistantAgent(
-        system_message = DEFAULT_SYSTEM_MESSAGE + ' Sometimes suggest another thing to do that might help.',
-        name="weather_agent_2",
+        # system_message = DEFAULT_SYSTEM_MESSAGE + ' Sometimes suggest another thing to do that might help.',
+        system_message = CODER_MESSAGE,
+        name="coder_agent",
         model_client=OpenAIChatCompletionClient(
             model="gpt-4o-2024-08-06",
             api_key=OPENAI_API_KEY,
@@ -72,7 +76,8 @@ async def main() -> None:
 
     # Run the team and stream messages to the console
 ##    stream = agent_team.run_stream(task="What is the weather in New York?")
-    stream = agent_team.run_stream(task="What is the weather in several prominent cities?")
+    # stream = agent_team.run_stream(task="What is the weather in several prominent cities?")
+    stream = agent_team.run_stream(task="Create a snake game in python.")
     await Console(stream)
 
 asyncio.run(main())
